@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\TicketReplyNotification;
+use App\Notifications\TicketStatusUpdated;
 
 class SupportTicketController extends Controller
 {
@@ -48,7 +49,7 @@ class SupportTicketController extends Controller
         $ticket->update(['status' => 'closed']);
 
         // Notify User
-        // $ticket->user->notify(new TicketStatusUpdated($ticket)); // Optional: Notify user of closure
+        $ticket->user->notify(new TicketStatusUpdated($ticket));
 
         return back()->with('success', 'Ticket closed successfully.');
     }
