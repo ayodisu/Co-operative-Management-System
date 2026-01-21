@@ -1,3 +1,6 @@
+ @php
+     $currentUser = Auth::guard('admin')->user() ?? Auth::user();
+ @endphp
  <!-- partial:../../partials/_navbar.html -->
  <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
@@ -19,7 +22,7 @@
          <ul class="navbar-nav">
              <li class="nav-item fw-semibold d-none d-lg-block ms-0">
                  <h1 class="welcome-text">Good Afternoon, <span
-                         class="text-black fw-bold">{{ auth()->user()->name }}</span></h1>
+                         class="text-black fw-bold">{{ $currentUser->name }}</span></h1>
                  <h3 class="welcome-sub-text">Your performance summary this week </h3>
              </li>
          </ul>
@@ -33,23 +36,23 @@
              <li class="nav-item dropdown">
                  <a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
                      <i class="icon-bell"></i>
-                     @if (auth()->user()->unreadNotifications->count() > 0)
+                     @if ($currentUser->unreadNotifications->count() > 0)
                          <span class="count"></span>
                      @endif
                  </a>
                  <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
                      aria-labelledby="notificationDropdown">
                      <div class="dropdown-header d-flex align-items-center justify-content-between py-3 border-bottom">
-                         <p class="mb-0 fw-medium">You have {{ auth()->user()->unreadNotifications->count() }} new
+                         <p class="mb-0 fw-medium">You have {{ $currentUser->unreadNotifications->count() }} new
                              notifications </p>
-                         @if (auth()->user()->unreadNotifications->count() > 0)
+                         @if ($currentUser->unreadNotifications->count() > 0)
                              <a href="{{ route('notifications.markAsRead') }}"
                                  class="badge badge-pill badge-primary">Mark all as read</a>
                          @endif
                      </div>
 
                      <div style="max-height: 300px; overflow-y: auto;">
-                         @forelse(auth()->user()->unreadNotifications as $notification)
+                         @forelse($currentUser->unreadNotifications as $notification)
                              <a class="dropdown-item preview-item py-3" href="{{ $notification->data['url'] ?? '#' }}">
                                  <div class="preview-thumbnail">
                                      <i class="mdi mdi-bell-outline m-auto text-primary"></i>
@@ -71,21 +74,22 @@
              </li>
              <li class="nav-item dropdown d-none d-lg-block user-dropdown">
                  <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                     <img class="img-xs rounded-circle" src="{{ auth()->user()->profile_picture_url }}"
+                     <img class="img-xs rounded-circle" src="{{ $currentUser->profile_picture_url }}"
                          alt="Profile image">
                  </a>
                  <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                      <div class="dropdown-header text-center pb-3">
-                         <img class="img-md rounded-circle" src="{{ auth()->user()->profile_picture_url }}"
+                         <img class="img-md rounded-circle" src="{{ $currentUser->profile_picture_url }}"
                              alt="Profile image" style="width: 40px; height: 40px; object-fit: cover;">
-                         <p class="mb-1 mt-3 fw-semibold text-dark">{{ auth()->user()->name }}</p>
-                         <p class="fw-light text-muted mb-0">{{ auth()->user()->email }}</p>
+                         <p class="mb-1 mt-3 fw-semibold text-dark">{{ $currentUser->name }}</p>
+                         <p class="fw-light text-muted mb-0">{{ $currentUser->email }}</p>
                      </div>
                      <a class="dropdown-item" href="{{ route('profile.edit') }}"><i
                              class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile
                      </a>
 
-                     <form method="POST" action="{{ route('logout') }}">
+                     <form method="POST"
+                         action="{{ Auth::guard('admin')->check() ? route('admin.logout') : route('logout') }}">
                          @csrf
                          <button type="submit" class="dropdown-item">
                              <i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>

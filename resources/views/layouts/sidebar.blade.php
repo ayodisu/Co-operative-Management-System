@@ -6,7 +6,7 @@
         {{-- Shared --}}
         <li class="nav-item nav-category">Navigation</li>
 
-        @if (auth()->user()?->is_admin)
+        @if (auth('admin')->check())
             {{-- Admin Menu --}}
             <li class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.dashboard') }}">
@@ -103,7 +103,8 @@
         </li>
 
         <li class="nav-item">
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST"
+                action="{{ Auth::guard('admin')->check() ? route('admin.logout') : route('logout') }}">
                 @csrf
                 <button class="nav-link btn btn-link text-start">
                     <i class="menu-icon mdi mdi-logout"></i>

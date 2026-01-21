@@ -63,42 +63,59 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Admin Routes
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
 
-    // The main admin landing page
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/admin', function () {
+    return redirect()->route('admin.login');
+});
 
-    // Existing member routes
-    Route::prefix('members')->name('members.')->group(function () {
-        Route::get('/', [adminMemberController::class, 'index'])->name('index');
-        Route::get('/{member}', [adminMemberController::class, 'show'])->name('show');
-        Route::put('/{member}/suspend', [adminMemberController::class, 'suspend'])->name('suspend');
-        Route::delete('/{member}', [adminMemberController::class, 'destroy'])->name('destroy');
-        Route::get('/{member}/edit', [adminMemberController::class, 'edit'])->name('edit');
-        Route::patch('/{member}', [adminMemberController::class, 'update'])->name('update');
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    // Guest Admin Routes
+    Route::middleware('guest:admin')->group(function () {
+        Route::get('login', [App\Http\Controllers\Admin\Auth\LoginController::class, 'showLoginForm'])->name('login');
+        Route::post('login', [App\Http\Controllers\Admin\Auth\LoginController::class, 'login'])
+            ->middleware('throttle:5,1'); // 5 attempts per minute
     });
 
-    // Loans Management
-    Route::get('/loans', [adminLoanController::class, 'index'])->name('loans.index');
-    Route::get('/loans/{loan}', [adminLoanController::class, 'show'])->name('loans.show');
-    Route::put('/loans/{loan}', [adminLoanController::class, 'update'])->name('loans.update');
-    Route::post('/loans/{loan}/repayments', [adminRepaymentController::class, 'store'])->name('repayments.store');
+    // Authenticated Admin Routes
+    Route::middleware(['auth:admin'])->group(function () {
+        Route::post('logout', [App\Http\Controllers\Admin\Auth\LoginController::class, 'logout'])->name('logout');
 
-    // Repayments
-    Route::get('/repayments', [adminRepaymentController::class, 'index'])->name('repayments.index');
+        // The main admin landing page
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Support Tickets
-    Route::get('/support-tickets', [adminSupportTicketController::class, 'index'])->name('tickets.index');
-    Route::get('/support-tickets/{id}', [adminSupportTicketController::class, 'show'])->name('support.show');
-    Route::post('/support-tickets/{ticket}/reply', [adminSupportTicketController::class, 'reply'])->name('support.reply');
-    Route::post('/support-tickets/{ticket}/close', [adminSupportTicketController::class, 'close'])->name('support.close');
+        // Existing member routes
+        Route::prefix('members')->name('members.')->group(function () {
+            Route::get('/', [adminMemberController::class, 'index'])->name('index');
+            Route::get('/{member}', [adminMemberController::class, 'show'])->name('show');
+            Route::put('/{member}/suspend', [adminMemberController::class, 'suspend'])->name('suspend');
+            Route::delete('/{member}', [adminMemberController::class, 'destroy'])->name('destroy');
+            Route::get('/{member}/edit', [adminMemberController::class, 'edit'])->name('edit');
+            Route::patch('/{member}', [adminMemberController::class, 'update'])->name('update');
+        });
 
-    // System Settings
-    Route::get('/settings', [adminSettingController::class, 'index'])->name('settings.index');
-    Route::put('/settings', [adminSettingController::class, 'update'])->name('settings.update');
+        // Loans Management
+        Route::get('/loans', [adminLoanController::class, 'index'])->name('loans.index');
+        Route::get('/loans/{loan}', [adminLoanController::class, 'show'])->name('loans.show');
+        Route::put('/loans/{loan}', [adminLoanController::class, 'update'])->name('loans.update');
+        Route::post('/loans/{loan}/repayments', [adminRepaymentController::class, 'store'])->name('repayments.store');
 
-    // Financial Reports
-    Route::get('/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');
+        // Repayments
+        Route::get('/repayments', [adminRepaymentController::class, 'index'])->name('repayments.index');
+
+        // Support Tickets
+        Route::get('/support-tickets', [adminSupportTicketController::class, 'index'])->name('tickets.index');
+        Route::get('/support-tickets/{id}', [adminSupportTicketController::class, 'show'])->name('support.show');
+        Route::post('/support-tickets/{ticket}/reply', [adminSupportTicketController::class, 'reply'])->name('support.reply');
+        Route::post('/support-tickets/{ticket}/close', [adminSupportTicketController::class, 'close'])->name('support.close');
+
+        // System Settings
+        Route::get('/settings', [adminSettingController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [adminSettingController::class, 'update'])->name('settings.update');
+
+        // Financial Reports
+        Route::get('/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');
+    });
 });
 
 Route::middleware(['auth'])->group(function () {
