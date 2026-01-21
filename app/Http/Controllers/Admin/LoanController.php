@@ -7,6 +7,7 @@ use App\Models\Loan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\LoanStatusUpdated;
+use App\Models\ActivityLog;
 
 class LoanController extends Controller
 {
@@ -51,6 +52,19 @@ class LoanController extends Controller
 
             if ($oldStatus !== $request->status) {
                 $loan->user->notify(new LoanStatusUpdated($loan));
+
+                // Log the activity
+                ActivityLog::log(
+                    "Loan #{$loan->id} {$request->status} for {$loan->user->name}",
+                    $loan,
+                    [
+                        'old_status' => $oldStatus,
+                        'new_status' => $request->status,
+                        'amount' => $loan->amount,
+                        'admin_remark' => $request->admin_remark,
+                    ],
+                    'loan'
+                );
             }
         });
 

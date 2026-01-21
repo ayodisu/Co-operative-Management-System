@@ -41,6 +41,9 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard.user', compact('profile', 'activeLoansCount', 'pendingLoansCount'));
     })->middleware('verified')->name('user.dashboard');
 
+    // Alias for Laravel Breeze compatibility
+    Route::get('/home', fn() => redirect()->route('user.dashboard'))->name('dashboard');
+
 
     // Profile Management
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -115,6 +118,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Financial Reports
         Route::get('/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');
+
+        // Activity Logs
+        Route::get('/activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
     });
 });
 

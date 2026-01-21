@@ -22,7 +22,22 @@ class TicketReplyNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'mail'];
+    }
+
+    public function toMail(object $notifiable): MailMessage
+    {
+        $url = $notifiable->id === $this->ticket->user_id
+            ? route('support.show', $this->ticket->id)
+            : route('admin.support.show', $this->ticket->id);
+
+        return (new MailMessage)
+            ->subject('New Reply on Ticket #' . $this->ticket->id)
+            ->greeting('Hello ' . $notifiable->name . ',')
+            ->line($this->replierName . ' has replied to your support ticket.')
+            ->line('**Subject:** ' . $this->ticket->subject)
+            ->action('View Ticket', $url)
+            ->line('Thank you for using OAuGF Cooperative Society!');
     }
 
     public function toArray(object $notifiable): array

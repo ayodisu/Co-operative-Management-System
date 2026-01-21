@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
+            $table->string('log_name')->nullable()->index();
+            $table->text('description');
+            $table->nullableMorphs('subject'); // The model being acted on
+            $table->nullableMorphs('causer');  // Who performed the action
+            $table->json('properties')->nullable();
             $table->timestamps();
         });
     }
