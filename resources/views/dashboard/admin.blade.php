@@ -98,6 +98,40 @@
                     </div>
                 </a>
             </div>
+
+            <div class="col-xl-4 col-md-6 mb-4">
+                <a href="{{ route('admin.repayments.index') }}" style="text-decoration: none;">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body card-row">
+                            <i class="mdi mdi-cash-check text-success" style="font-size: 2rem;"></i>
+                            <div>
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Repayments
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    ₦{{ number_format($totalRepayments, 2) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-4 col-md-6 mb-4">
+                <a href="{{ route('admin.savings.index') }}" style="text-decoration: none;">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body card-row">
+                            <i class="mdi mdi-swap-horizontal text-info" style="font-size: 2rem;"></i>
+                            <div>
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Savings Transactions
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{ number_format($savingsTransactionsCount) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 @endsection

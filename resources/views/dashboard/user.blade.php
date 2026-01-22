@@ -16,19 +16,21 @@
         <div class="row">
 
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-primary shadow h-100 py-2">
-                    <div class="card-body card-row">
-                        <i class="mdi mdi-piggy-bank text-gray-300" style="font-size: 2rem;"></i>
-                        <div>
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 single-line">
-                                Total Contributions
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800 single-line">
-                                ₦{{ number_format($profile->total_contributions ?? 0, 2) }}
+                <a href="{{ route('savings.index') }}" style="text-decoration: none;">
+                    <div class="card border-left-primary shadow h-100 py-2 text-decoration-none">
+                        <div class="card-body card-row">
+                            <i class="mdi mdi-piggy-bank text-primary" style="font-size: 2rem;"></i>
+                            <div>
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 single-line">
+                                    Total Contributions
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 single-line">
+                                    ₦{{ number_format($profile->total_contributions ?? 0, 2) }}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <div class="col-xl-3 col-md-6 mb-4">

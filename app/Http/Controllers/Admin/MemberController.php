@@ -17,7 +17,9 @@ class MemberController extends Controller
 
     public function show(User $member)
     {
-        $member->load('profile');
+        $member->load(['profile', 'loans', 'savingsTransactions' => function ($query) {
+            $query->latest()->limit(10);
+        }]);
 
         return view('admin.members.show', compact('member'));
     }

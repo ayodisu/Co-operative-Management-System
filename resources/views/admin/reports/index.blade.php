@@ -77,7 +77,7 @@
                 </div>
 
                 <!-- Total Equity (Snapshot) -->
-                <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="col-xl-3 col-sm-6 grid-margin stretch-card mb-4">
                     <div class="card border-left-warning shadow h-100 py-2">
                         <div class="card-body card-row">
                             <i class="mdi mdi-safe text-gray-300" style="font-size: 2rem;"></i>
@@ -89,6 +89,78 @@
                                     ₦{{ number_format($totalEquity, 2) }}
                                 </div>
                                 <small class="text-muted">Total Active Contributions</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interest Credited -->
+                <div class="col-xl-3 col-sm-6 grid-margin stretch-card mb-4">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body card-row">
+                            <i class="mdi mdi-trending-up text-gray-300" style="font-size: 2rem;"></i>
+                            <div>
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1 single-line">
+                                    Interest Paid
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 single-line">
+                                    ₦{{ number_format($totalInterest, 2) }}
+                                </div>
+                                <small class="text-muted">Credited in Period</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Savings Summary Row -->
+            <div class="row">
+                <div class="col-xl-3 col-sm-6 grid-margin stretch-card mb-4">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body card-row">
+                            <i class="mdi mdi-plus-circle text-gray-300" style="font-size: 2rem;"></i>
+                            <div>
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1 single-line">
+                                    Total Deposits
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 single-line">
+                                    ₦{{ number_format($totalDeposits, 2) }}
+                                </div>
+                                <small class="text-muted">Inflow in Period</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-sm-6 grid-margin stretch-card mb-4">
+                    <div class="card border-left-danger shadow h-100 py-2">
+                        <div class="card-body card-row">
+                            <i class="mdi mdi-minus-circle text-gray-300" style="font-size: 2rem;"></i>
+                            <div>
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1 single-line">
+                                    Total Withdrawals
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 single-line">
+                                    ₦{{ number_format($totalWithdrawals, 2) }}
+                                </div>
+                                <small class="text-muted">Outflow in Period</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-sm-6 grid-margin stretch-card mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body card-row">
+                            <i class="mdi mdi-scale-balance text-gray-300" style="font-size: 2rem;"></i>
+                            <div>
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 single-line">
+                                    Net Savings Change
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 single-line">
+                                    ₦{{ number_format($totalDeposits - $totalWithdrawals + $totalInterest, 2) }}
+                                </div>
+                                <small class="text-muted">Growth in Period</small>
                             </div>
                         </div>
                     </div>

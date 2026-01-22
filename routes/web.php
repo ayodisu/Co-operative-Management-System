@@ -57,6 +57,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/loans/history', [LoanController::class, 'history'])->name('loans.history');
     Route::get('/loans/schedule', [LoanController::class, 'schedule'])->name('loans.schedule');
 
+    // Savings
+    Route::get('/savings', [App\Http\Controllers\SavingsController::class, 'index'])->name('savings.index');
+
     // Support
     Route::get('/support', [SupportController::class, 'index'])->name('support.index');
     Route::get('/support/create', [SupportController::class, 'create'])->name('support.create');
@@ -110,6 +113,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Repayments
         Route::get('/repayments', [adminRepaymentController::class, 'index'])->name('repayments.index');
+
+        // Savings Management
+        Route::get('/savings', [App\Http\Controllers\Admin\SavingsController::class, 'index'])->name('savings.index');
 
 
 

@@ -11,6 +11,22 @@ use Illuminate\Support\Facades\DB;
 class SavingsController extends Controller
 {
     /**
+     * Display a listing of all savings transactions.
+     */
+    public function index(Request $request)
+    {
+        $query = SavingsTransaction::with('user')->latest();
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        $transactions = $query->paginate(20);
+
+        return view('admin.savings.index', compact('transactions'));
+    }
+
+    /**
      * Store a new savings transaction (Deposit/Withdrawal).
      */
     public function store(Request $request, User $user)

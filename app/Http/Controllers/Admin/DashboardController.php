@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Loan;
 use App\Models\MemberProfile;
 use App\Models\Ticket;
+use App\Models\Repayment;
+use App\Models\SavingsTransaction;
 
 class DashboardController extends Controller
 {
@@ -19,6 +21,8 @@ class DashboardController extends Controller
         $totalEquity = MemberProfile::sum('total_contributions');
         $totalLoanDisbursed = Loan::where('status', 'approved')->sum('amount');
         $openTicketsCount = Ticket::where('status', 'open')->count();
+        $totalRepayments = Repayment::sum('amount');
+        $savingsTransactionsCount = SavingsTransaction::count();
 
         return view('dashboard.admin', compact(
             'totalMembers',
@@ -26,7 +30,9 @@ class DashboardController extends Controller
             'pendingRequestsCount',
             'totalEquity',
             'totalLoanDisbursed',
-            'openTicketsCount'
+            'openTicketsCount',
+            'totalRepayments',
+            'savingsTransactionsCount'
         ));
     }
 }

@@ -28,6 +28,13 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ request()->routeIs('admin.savings.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.savings.index') }}">
+                    <i class="menu-icon mdi mdi-piggy-bank"></i>
+                    <span class="menu-title">Savings Transactions</span>
+                </a>
+            </li>
+
             <li class="nav-item {{ request()->routeIs('admin.members.*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.members.index') }}">
                     <i class="mdi mdi-account-multiple menu-icon"></i>
@@ -82,6 +89,13 @@
                 <a class="nav-link" href="{{ route('loans.schedule') }}">
                     <i class="menu-icon mdi mdi-calendar-clock"></i>
                     <span class="menu-title">Repayment Schedule</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ request()->routeIs('savings.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('savings.index') }}">
+                    <i class="menu-icon mdi mdi-piggy-bank"></i>
+                    <span class="menu-title">My Savings</span>
                 </a>
             </li>
 

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Loan;
 use App\Models\Repayment;
 use App\Models\MemberProfile;
+use App\Models\SavingsTransaction;
 use Carbon\Carbon;
 
 class ReportController extends Controller
@@ -43,6 +44,11 @@ class ReportController extends Controller
             ->limit(5)
             ->get();
 
+        $savingsQuery = SavingsTransaction::whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
+        $totalDeposits = (clone $savingsQuery)->where('type', 'deposit')->sum('amount');
+        $totalWithdrawals = (clone $savingsQuery)->where('type', 'withdrawal')->sum('amount');
+        $totalInterest = (clone $savingsQuery)->where('type', 'interest')->sum('amount');
+
         return view('admin.reports.index', compact(
             'startDate',
             'endDate',
@@ -52,7 +58,10 @@ class ReportController extends Controller
             'repaymentsCollected',
             'totalEquity',
             'recentLoans',
-            'recentRepayments'
+            'recentRepayments',
+            'totalDeposits',
+            'totalWithdrawals',
+            'totalInterest'
         ));
     }
 }
