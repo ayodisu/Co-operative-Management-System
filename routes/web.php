@@ -63,6 +63,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/support', [SupportController::class, 'store'])->name('support.store');
     Route::get('/support/{ticket}', [SupportController::class, 'show'])->name('support.show');
     Route::post('/support/{ticket}/reply', [SupportController::class, 'reply'])->name('support.reply');
+
+    // Reports
+    Route::get('/reports/savings/{user}', [App\Http\Controllers\ReportController::class, 'savingsStatement'])->name('reports.savings');
+    Route::get('/reports/loans/{loan}', [App\Http\Controllers\ReportController::class, 'loanStatement'])->name('reports.loan');
 });
 
 // Admin Routes
@@ -102,9 +106,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/loans/{loan}', [adminLoanController::class, 'show'])->name('loans.show');
         Route::put('/loans/{loan}', [adminLoanController::class, 'update'])->name('loans.update');
         Route::post('/loans/{loan}/repayments', [adminRepaymentController::class, 'store'])->name('repayments.store');
+        Route::post('/users/{user}/savings', [App\Http\Controllers\Admin\SavingsController::class, 'store'])->name('savings.store');
 
         // Repayments
         Route::get('/repayments', [adminRepaymentController::class, 'index'])->name('repayments.index');
+
+
 
         // Support Tickets
         Route::get('/support-tickets', [adminSupportTicketController::class, 'index'])->name('tickets.index');

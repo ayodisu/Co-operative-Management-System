@@ -22,6 +22,7 @@
                                     <th>Duration</th>
                                     <th>Status</th>
                                     <th>Date Applied</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,10 +47,14 @@
                                             <label class="badge {{ $badgeClass }}">{{ ucfirst($loan->status) }}</label>
                                         </td>
                                         <td>{{ $loan->created_at->format('d M Y') }}</td>
+                                        <td>
+                                            <a href="{{ route('reports.loan', $loan) }}"
+                                                class="btn btn-sm btn-info">Download</a>
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center text-muted">You have no loan history yet.</td>
+                                        <td colspan="8" class="text-center text-muted">You have no loan history yet.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
