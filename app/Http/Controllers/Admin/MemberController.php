@@ -8,9 +8,18 @@ use Illuminate\Http\Request;
 
 class MemberController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $members = User::where('role', 'user')->with('profile')->latest()->get();
+        $query = User::where('role', 'user')->with('profile')->latest();
+
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $members = $query->paginate(15);
 
         return view('admin.members.index', compact('members'));
     }

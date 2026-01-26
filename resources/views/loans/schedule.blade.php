@@ -1,73 +1,130 @@
-@extends('layouts.main')
+@extends('layouts.modern')
 
 @section('title', 'Repayment Schedule')
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-12 grid-margin stretch-card">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h4 class="card-title text-primary">Repayment Schedule</h4>
-                    <p class="card-description">
-                        Official monthly breakdown for your active loan.
-                    </p>
+    <div class="animate-in">
 
-                    @if (isset($loan) && $loan)
-                        @if ($loan->status == 'pending')
-                            <div class="alert alert-warning border-0">
-                                <i class="mdi mdi-clock-outline mr-2"></i>
-                                <strong>Provisional Schedule:</strong> This loan is currently <strong>Pending</strong>. This
-                                schedule is subject to change upon approval.
-                            </div>
+        {{-- Page Header --}}
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Repayment Schedule</h1>
+                <p class="page-description">View your upcoming loan repayment schedule.</p>
+            </div>
+            @if (isset($loan))
+                <a href="{{ route('reports.loan', $loan) }}" class="btn btn-primary">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    Download Statement
+                </a>
+            @endif
+        </div>
+
+        @if (isset($loan) && $loan)
+            {{-- Loan Summary --}}
+            <div class="card-modern p-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div>
+                        <p class="text-sm text-secondary-500 dark:text-secondary-400 mb-1">Loan Amount</p>
+                        <p class="text-xl font-bold text-secondary-900 dark:text-white">
+                            ₦{{ number_format($loan->amount, 2) }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-secondary-500 dark:text-secondary-400 mb-1">Duration</p>
+                        <p class="text-xl font-bold text-secondary-900 dark:text-white">{{ $loan->duration_months }} months
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-secondary-500 dark:text-secondary-400 mb-1">Monthly Payment</p>
+                        <p class="text-xl font-bold text-secondary-900 dark:text-white">
+                            ₦{{ number_format($loan->amount / $loan->duration_months, 2) }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-secondary-500 dark:text-secondary-400 mb-1">Status</p>
+                        @if ($loan->status === 'pending')
+                            <span class="badge badge-warning">Pending Approval</span>
+                        @elseif($loan->status === 'approved' || $loan->status === 'running')
+                            <span class="badge badge-success">Active</span>
+                        @else
+                            <span class="badge badge-info">{{ ucfirst($loan->status) }}</span>
                         @endif
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover mt-3">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Due Date</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                        <th>Paid On</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($schedule as $index => $item)
-                                        <tr>
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($item->due_date)->format('d M Y') }}</td>
-                                            <td class="font-weight-bold">₦{{ number_format($item->amount, 2) }}</td>
-                                            <td>
-                                                @php
-                                                    $badgeClass = match ($item->status) {
-                                                        'paid' => 'badge-success',
-                                                        'pending' => 'badge-warning',
-                                                        'overdue' => 'badge-danger',
-                                                        default => 'badge-secondary',
-                                                    };
-                                                @endphp
-                                                <label
-                                                    class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</label>
-                                            </td>
-                                            <td>{{ $item->paid_at ? \Carbon\Carbon::parse($item->paid_at)->format('d M Y') : '-' }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="text-center py-5">
-                            <div class="mb-3">
-                                <i class="mdi mdi-clipboard-text-outline mdi-48px text-muted"></i>
-                            </div>
-                            <h5 class="text-secondary">No active loan found</h5>
-                            <p class="text-muted">Once your loan is approved, your repayment schedule will appear here.</p>
-                            <a href="{{ route('loans.apply') }}" class="btn btn-primary mt-2">Apply for a Loan</a>
-                        </div>
-                    @endif
+                    </div>
                 </div>
             </div>
-        </div>
+
+            {{-- Schedule Table --}}
+            <div class="card-modern overflow-hidden">
+                <div class="p-6 border-b border-secondary-100 dark:border-secondary-700">
+                    <h3 class="font-semibold text-secondary-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="calendar" class="w-5 h-5 text-primary"></i>
+                        Payment Schedule
+                    </h3>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="table-modern">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Due Date</th>
+                                <th class="text-right">Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($schedule as $index => $payment)
+                                <tr>
+                                    <td class="font-medium text-secondary-900 dark:text-white">{{ $index + 1 }}</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <i data-lucide="calendar-days" class="w-4 h-4 text-secondary-400"></i>
+                                            {{ $payment->due_date->format('M d, Y') }}
+                                        </div>
+                                    </td>
+                                    <td class="text-right font-semibold text-secondary-900 dark:text-white">
+                                        ₦{{ number_format($payment->amount, 2) }}
+                                    </td>
+                                    <td>
+                                        @if ($payment->paid_at)
+                                            <span class="badge badge-success">
+                                                <i data-lucide="check" class="w-3 h-3 mr-1"></i>
+                                                Paid
+                                            </span>
+                                        @elseif($payment->status === 'overdue')
+                                            <span class="badge badge-danger">
+                                                <i data-lucide="alert-triangle" class="w-3 h-3 mr-1"></i>
+                                                Overdue
+                                            </span>
+                                        @else
+                                            <span class="badge badge-warning">
+                                                <i data-lucide="clock" class="w-3 h-3 mr-1"></i>
+                                                Pending
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @else
+            {{-- No Active Loan --}}
+            <div class="card-modern">
+                <div class="empty-state py-12">
+                    <div
+                        class="w-16 h-16 rounded-full bg-secondary-100 dark:bg-secondary-800 flex items-center justify-center mb-4">
+                        <i data-lucide="calendar-x" class="w-8 h-8 text-secondary-400"></i>
+                    </div>
+                    <p class="empty-state-title">No Active Loan</p>
+                    <p class="empty-state-description">You don't have an active loan to view a repayment schedule for. Apply
+                        for a loan to get started.</p>
+                    <a href="{{ route('loans.apply') }}" class="btn btn-primary mt-4">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Apply for Loan
+                    </a>
+                </div>
+            </div>
+        @endif
+
     </div>
 @endsection

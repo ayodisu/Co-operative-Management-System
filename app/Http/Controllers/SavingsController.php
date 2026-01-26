@@ -14,7 +14,8 @@ class SavingsController extends Controller
     {
         $transactions = Auth::user()->savingsTransactions()->latest()->paginate(20);
         $profile = Auth::user()->profile;
+        $balance = $profile->total_contributions ?? 0;
 
-        return view('savings.index', compact('transactions', 'profile'));
+        return view('savings.index', compact('transactions', 'profile', 'balance'));
     }
 }

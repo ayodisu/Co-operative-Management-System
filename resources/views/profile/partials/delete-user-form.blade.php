@@ -1,23 +1,19 @@
-<form method="POST" action="{{ route('profile.destroy') }}"
-      onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+<form method="POST" action="{{ route('profile.destroy') }}" class="space-y-6"
+    onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
     @csrf
     @method('DELETE')
 
-    <p class="text-danger mb-3">
-        Once your account is deleted, all of its resources and data will be permanently deleted.
-    </p>
-
-    <div class="mb-3">
-        <label for="password" class="form-label">Confirm Password</label>
-        <input type="password"
-               class="form-control @error('password') is-invalid @enderror"
-               id="password"
-               name="password"
-               required>
+    <div>
+        <label for="delete_password" class="input-label">Confirm Password</label>
+        <input type="password" class="input-modern @error('password') border-red-500 @enderror" id="delete_password"
+            name="password" placeholder="Enter password to confirm deletion" required>
         @error('password')
-            <div class="invalid-feedback">{{ $message }}</div>
+            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
         @enderror
     </div>
 
-    <button type="submit" class="btn btn-danger">Delete Account</button>
+    <button type="submit" class="btn btn-danger w-full">
+        <i data-lucide="trash-2" class="w-4 h-4"></i>
+        Permanently Delete Account
+    </button>
 </form>

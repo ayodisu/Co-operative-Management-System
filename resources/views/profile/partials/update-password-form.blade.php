@@ -1,29 +1,46 @@
-<form method="POST" action="{{ route('password.update') }}">
+<form method="POST" action="{{ route('password.update') }}" class="space-y-6">
     @csrf
     @method('PUT')
 
-    <div class="mb-3">
-        <label for="current_password" class="form-label">Current Password</label>
-        <input type="password" class="form-control @error('current_password') is-invalid @enderror" id="current_password"
-            name="current_password" required>
+    <div>
+        <label for="current_password" class="input-label">Current Password</label>
+        <div class="relative">
+            <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-400"></i>
+            <input type="password" class="input-modern pl-11 @error('current_password') border-red-500 @enderror"
+                id="current_password" name="current_password" required placeholder="••••••••">
+        </div>
         @error('current_password')
-            <div class="invalid-feedback">{{ $message }}</div>
+            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
         @enderror
     </div>
 
-    <div class="mb-3">
-        <label for="password" class="form-label">New Password</label>
-        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
-            name="password" required>
+    <div>
+        <label for="password" class="input-label">New Password</label>
+        <div class="relative">
+            <i data-lucide="shield-check"
+                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-400"></i>
+            <input type="password" class="input-modern pl-11 @error('password') border-red-500 @enderror" id="password"
+                name="password" required placeholder="Minimum 8 characters">
+        </div>
         @error('password')
-            <div class="invalid-feedback">{{ $message }}</div>
+            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
         @enderror
     </div>
 
-    <div class="mb-3">
-        <label for="password_confirmation" class="form-label">Confirm New Password</label>
-        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+    <div>
+        <label for="password_confirmation" class="input-label">Confirm New Password</label>
+        <div class="relative">
+            <i data-lucide="shield-check"
+                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-400"></i>
+            <input type="password" class="input-modern pl-11" id="password_confirmation" name="password_confirmation"
+                required placeholder="Repeat new password">
+        </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Update Password</button>
+    <div class="flex justify-end pt-2">
+        <button type="submit" class="btn btn-primary px-8">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            Update Password
+        </button>
+    </div>
 </form>

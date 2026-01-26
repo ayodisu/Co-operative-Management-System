@@ -1,60 +1,72 @@
-@extends('layouts.main')
+@extends('layouts.modern')
 
 @section('title', 'Contact Support')
 
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-md-8 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Need Help? Contact Support</h4>
-                    <p class="card-description"> Fill out the form below and our team will respond shortly. </p>
-
-                    @if (session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    <form action="{{ route('support.store') }}" method="POST" class="forms-sample">
-                        @csrf
-
-                        <div class="form-group">
-                            <label for="subject">Subject</label>
-                            <input type="text" name="subject" class="form-control @error('subject') is-invalid @enderror"
-                                placeholder="e.g. Loan issue" required value="{{ old('subject') }}">
-                            @error('subject')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="priority">Priority</label>
-                            <select name="priority" class="form-control @error('priority') is-invalid @enderror" required>
-                                <option value="low" {{ old('priority') == 'low' ? 'selected' : '' }}>Low</option>
-                                <option value="medium" {{ old('priority') == 'medium' ? 'selected' : '' }}>Medium</option>
-                                <option value="high" {{ old('priority') == 'high' ? 'selected' : '' }}>High</option>
-                            </select>
-                            @error('priority')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea name="message" rows="4" class="form-control @error('message') is-invalid @enderror"
-                                placeholder="Describe your issue here..." required></textarea>
-                            @error('message')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <button type="submit" class="btn btn-primary me-2">Submit</button>
-                        <button type="reset" class="btn btn-light">Reset</button>
-                    </form>
-                </div>
+    <div class="animate-in max-w-2xl mx-auto">
+        {{-- Page Header --}}
+        <div class="page-header">
+            <div>
+                <a href="{{ route('support.index') }}"
+                    class="inline-flex items-center gap-2 text-sm text-secondary-500 hover:text-primary mb-4 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    Back to Tickets
+                </a>
+                <h1 class="page-title">Need Help?</h1>
+                <p class="page-description">Fill out the form below and our team will respond shortly.</p>
             </div>
         </div>
-    </div>
 
+        {{-- Form Card --}}
+        <div class="card-modern p-6 md:p-8">
+            <form action="{{ route('support.store') }}" method="POST" class="space-y-6">
+                @csrf
+
+                <div>
+                    <label for="subject" class="input-label">Subject</label>
+                    <input type="text" name="subject" id="subject"
+                        class="input-modern @error('subject') border-red-500 @enderror"
+                        placeholder="e.g. Issue with loan application" required value="{{ old('subject') }}">
+                    @error('subject')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="priority" class="input-label">Priority Level</label>
+                    <select name="priority" id="priority" class="input-modern @error('priority') border-red-500 @enderror"
+                        required>
+                        <option value="low" {{ old('priority') == 'low' ? 'selected' : '' }}>Low - Non-urgent inquiry
+                        </option>
+                        <option value="medium" {{ old('priority', 'medium') == 'medium' ? 'selected' : '' }}>Medium - Normal
+                            assistance</option>
+                        <option value="high" {{ old('priority') == 'high' ? 'selected' : '' }}>High - Urgent issue
+                        </option>
+                    </select>
+                    @error('priority')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="message" class="input-label">Message Details</label>
+                    <textarea name="message" id="message" rows="6" class="input-modern @error('message') border-red-500 @enderror"
+                        placeholder="Please describe your issue in detail so we can help you better..." required>{{ old('message') }}</textarea>
+                    @error('message')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="flex items-center gap-4 pt-2">
+                    <button type="submit" class="btn btn-primary flex-1">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                        Submit Ticket
+                    </button>
+                    <button type="reset" class="btn btn-secondary">
+                        Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
